@@ -59,13 +59,13 @@ static int __init init_nf(void)
     nfho.hooknum = NF_INET_LOCAL_IN;
     nfho.pf = PF_INET;
     nfho.priority = NF_IP_PRI_FIRST;
-    nfho.dev = dev_get_by_name(&init_net, pDeviceName);
+    //nfho.dev = dev_get_by_name(&init_net, pDeviceName);
 
-    ret = nf_register_net_hook(NULL, &nfho);
+    ret = nf_register_net_hook(&init_net, &nfho);
   
     if (ret) {
         printk(KERN_INFO "could not register netfilter hook\n");
-	nf_unregister_net_hook(NULL, &nfho);
+	nf_unregister_net_hook(&init_net, &nfho);
 	return -1;
     }
 
@@ -77,7 +77,7 @@ static int __init init_nf(void)
 static void __exit exit_nf(void)
 {
     printk(KERN_INFO "Unregister netfilter module.\n");
-    nf_unregister_net_hook(NULL, &nfho);
+    nf_unregister_net_hook(&init_net, &nfho);
 }
 
 module_init(init_nf);
